@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import Step1 from './components/Step1';
+import Step10 from './components/Step10';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 import Step4 from './components/Step4';
@@ -9,25 +10,25 @@ import Step6 from './components/Step6';
 import Step7 from './components/Step7';
 import Step8 from './components/Step8';
 import Step9 from './components/Step9';
-import Step10 from './components/Step10';
-import { STEP_PASSWORDS, STEP_METADATA } from './config/gameConfig';
+import { STEP_METADATA, STEP_PASSWORDS } from './config/gameConfig';
 
 // 단계별 지시문
 const INSTRUCTIONS: Record<number, string> = {
-  1: "풍선을 모두 클릭해서 터뜨려요! 🎈",
-  2: "꽃씨를 빠르게 눌러서 꽃을 피워요! 🌸",
-  3: "동물을 끌어다 알맞은 집에 놓아줘요! 🏠",
-  4: "점선을 따라 마우스를 움직여 그림을 완성해요! ✏️",
-  5: "숫자 순서대로 점을 클릭해서 이어요! 🔢",
-  6: "움직이는 동그라미를 클릭해요! 점점 작아져요! 🎯",
-  7: "두더지가 나오면 빨리 클릭해요! ⏰",
-  8: "공을 잡고 미로 끝까지 이동해요! 벽에 닿으면 안돼요! 🎱",
-  9: "순서대로 따라해요! 재료 클릭 → 냄비 더블클릭 → 재료 드래그! 🍳",
-  10: "방향키로 캐릭터를 움직여요! ↑키로 점프! 별에 도달하세요! ⭐",
+  1: "풍선을 모두 클릭해서 터뜨려요!",
+  2: "꽃씨를 빠르게 눌러서 꽃을 피워요!",
+  3: "동물을 끌어다 알맞은 집에 놓아줘요!",
+  4: "점선을 따라 마우스를 움직여 그림을 완성해요!",
+  5: "숫자 순서대로 점을 클릭해서 이어요!",
+  6: "움직이는 동그라미를 클릭해요! 점점 작아져요!",
+  7: "두더지가 나오면 빨리 클릭해요!",
+  8: "공을 잡고 미로 끝까지 이동해요! 벽에 닿으면 안돼요!",
+  9: "순서대로 따라해요! 재료 클릭 → 냄비 더블클릭 → 재료 드래그!",
+  10: "방향키로 캐릭터를 움직여요! ↑키로 점프! 별에 도달하세요!",
 };
 
 function App() {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [resetKey, setResetKey] = useState<number>(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
     const saved = localStorage.getItem('mcb_progress');
     if (saved) {
@@ -70,18 +71,15 @@ function App() {
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
     
-    // 이미 완료했거나 현재 단계의 바로 다음 단계면 이동 가능
-    if (targetStep > currentStep && !completedSteps.includes(currentStep)) {
-      alert('현재 단계를 먼저 완료해야 해요!');
+    // 이미 완료했거나 이전 단계면 바로 이동 (비밀번호 생략)
+    if (completedSteps.includes(targetStep) || targetStep < currentStep) {
+      setCurrentStep(targetStep);
       return;
     }
 
-    if (targetStep > currentStep) {
-      setShowPasswordInput(targetStep);
-      setPasswordValue('');
-    } else {
-      setCurrentStep(targetStep);
-    }
+    // 아직 완료하지 않은 미래의 단계(잠금 해제 상태)는 비밀번호 필요
+    setShowPasswordInput(targetStep);
+    setPasswordValue('');
   };
 
   const handlePasswordSubmit = () => {
@@ -113,7 +111,7 @@ function App() {
           </span>
         ))}
         <button className="reset-button" onClick={resetProgress}>
-          처음부터 다시하기 🔄
+          처음부터 다시하기
         </button>
       </div>
 
@@ -124,22 +122,21 @@ function App() {
 
       {/* 메인 미션 영역 */}
       <div className="mission-area">
-        {currentStep === 1 && <Step1 onComplete={() => completeStep(1)} />}
-        {currentStep === 2 && <Step2 onComplete={() => completeStep(2)} />}
-        {currentStep === 3 && <Step3 onComplete={() => completeStep(3)} />}
-        {currentStep === 4 && <Step4 onComplete={() => completeStep(4)} />}
-        {currentStep === 5 && <Step5 onComplete={() => completeStep(5)} />}
-        {currentStep === 6 && <Step6 onComplete={() => completeStep(6)} />}
-        {currentStep === 7 && <Step7 onComplete={() => completeStep(7)} />}
-        {currentStep === 8 && <Step8 onComplete={() => completeStep(8)} />}
-        {currentStep === 9 && <Step9 onComplete={() => completeStep(9)} />}
-        {currentStep === 10 && <Step10 onComplete={() => completeStep(10)} />}
+        {currentStep === 1 && <Step1 key={`s1-${resetKey}`} onComplete={() => completeStep(1)} />}
+        {currentStep === 2 && <Step2 key={`s2-${resetKey}`} onComplete={() => completeStep(2)} />}
+        {currentStep === 3 && <Step3 key={`s3-${resetKey}`} onComplete={() => completeStep(3)} />}
+        {currentStep === 4 && <Step4 key={`s4-${resetKey}`} onComplete={() => completeStep(4)} />}
+        {currentStep === 5 && <Step5 key={`s5-${resetKey}`} onComplete={() => completeStep(5)} />}
+        {currentStep === 6 && <Step6 key={`s6-${resetKey}`} onComplete={() => completeStep(6)} />}
+        {currentStep === 7 && <Step7 key={`s7-${resetKey}`} onComplete={() => completeStep(7)} />}
+        {currentStep === 8 && <Step8 key={`s8-${resetKey}`} onComplete={() => completeStep(8)} />}
+        {currentStep === 9 && <Step9 key={`s9-${resetKey}`} onComplete={() => completeStep(9)} />}
+        {currentStep === 10 && <Step10 key={`s10-${resetKey}`} onComplete={() => completeStep(10)} />}
         
         {/* 단계 완료 피드백 모달 */}
         {showFeedback && (
           <div className="modal-overlay">
             <div className="feedback-modal">
-              <div className="celebration-icon">🎉</div>
               <h2 style={{ color: '#6c5ce7', marginBottom: '10px' }}>{STEP_METADATA[showFeedback].learned}</h2>
               <div className="action-animation">
                 <span className="mouse-icon">{STEP_METADATA[showFeedback].icon}</span>
@@ -147,8 +144,32 @@ function App() {
                   {STEP_METADATA[showFeedback].description}
                 </p>
               </div>
-              <p className="next-hint">선생님의 도움을 받아 다음 단계로 넘어가세요!</p>
-              <button onClick={() => setShowFeedback(null)}>참 잘했어요!</button>
+              <div className="modal-buttons" style={{ marginTop: '20px', gap: '15px' }}>
+                <button 
+                  className="cancel" 
+                  onClick={() => {
+                    setResetKey(prev => prev + 1);
+                    setShowFeedback(null);
+                  }}
+                  style={{ backgroundColor: '#fab1a0' }}
+                >
+                  한번 더
+                </button>
+                {showFeedback < 10 && (
+                  <button 
+                    className="submit"
+                    onClick={() => {
+                      setShowFeedback(null);
+                      tryNavigate(showFeedback + 1);
+                    }}
+                  >
+                    다음 문제
+                  </button>
+                )}
+                {showFeedback === 10 && (
+                  <button className="submit" onClick={() => setShowFeedback(null)}>참 잘했어요! 🏆</button>
+                )}
+              </div>
             </div>
           </div>
         )}

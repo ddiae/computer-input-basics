@@ -1,15 +1,15 @@
 // 단계별 비밀번호 설정 (선생님께서 여기서 수정 가능합니다)
 export const STEP_PASSWORDS: Record<number, string> = {
   1: "사과",
-  2: "포도",
-  3: "나비",
+  2: "나비",
+  3: "포도",
   4: "바다",
-  5: "하늘",
+  5: "기차",
   6: "구름",
-  7: "나무",
-  8: "기차",
-  9: "우주",
-  10: "햇살",
+  7: "우주",
+  8: "햇살",
+  9: "나무",
+  10: "하늘",
 };
 
 export const STEP_METADATA: Record<number, { action: string; learned: string; description: string; icon: string }> = {

@@ -199,7 +199,7 @@ body {
 }
 
 .mouse-icon {
-  font-size: 3rem;
+  font-size: 2rem;
   display: block;
   margin-bottom: 10px;
   animation: bounce 1s infinite;
@@ -268,5 +268,5 @@ button.cancel {
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-5px); }
 }

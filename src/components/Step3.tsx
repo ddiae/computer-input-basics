@@ -33,8 +33,10 @@ const HOUSES: House[] = [
 ];
 
 const Step3: FC<{ onComplete: () => void }> = ({ onComplete }) => {
-  const [animals, setAnimals] = useState<Animal[]>(() => 
-    ANIMALS_DATA.map((a, i) => {
+  const [animals, setAnimals] = useState<Animal[]>(() => {
+    // 동물 순서 랜덤하게 섞기
+    const shuffled = [...ANIMALS_DATA].sort(() => Math.random() - 0.5);
+    return shuffled.map((a, i) => {
       // 상단 가로 배치 (중앙 정렬을 위해 약간의 여백 추가)
       const startPos = { x: 10 + (i * 14), y: 15 };
       return {
@@ -44,8 +46,8 @@ const Step3: FC<{ onComplete: () => void }> = ({ onComplete }) => {
         isPlaced: false,
         isHappy: false
       };
-    })
-  );
+    });
+  });
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 

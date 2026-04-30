@@ -4,6 +4,7 @@ const Step4: FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const isReadyToComplete = useRef(false);
   const [userPath, setUserPath] = useState<string>('');
   const [targetPoints, setTargetPoints] = useState<{x: number, y: number, hit: boolean}[]>([]);
 
@@ -61,13 +62,16 @@ const Step4: FC<{ onComplete: () => void }> = ({ onComplete }) => {
       
       const newProgress = Math.floor((hits / updated.length) * 100);
       setProgress(newProgress);
-      if (newProgress >= 80) setTimeout(onComplete, 500);
+      if (newProgress >= 100) isReadyToComplete.current = true;
       
       return updated;
     });
   };
 
-  const stopDrawing = () => setIsDrawing(false);
+  const stopDrawing = () => {
+    setIsDrawing(false);
+    if (isReadyToComplete.current) onComplete();
+  };
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', boxSizing: 'border-box' }}>
