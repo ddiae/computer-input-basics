@@ -42,7 +42,7 @@ export default function IntroPage() {
     <div className="intro-screen">
       <div className="intro-content">
         <div className="intro-emoji">💻</div>
-        <h1 className="intro-text">
+        <h1 className="intro-text text-xl font-black text-gray-800 leading-relaxed ">
           {lines.map((line, i) => (
             <span key={i}>
               {line}
@@ -59,7 +59,7 @@ export default function IntroPage() {
             마우스와 친해지기
           </button>
           <button
-            className={`intro-start-btn ${typingDone ? "visible" : ""}`}
+            className={`intro-start-btn2 ${typingDone ? "visible" : ""}`}
             onClick={() => navigate("/keyboard")}
           >
             키보드와 친해지기
