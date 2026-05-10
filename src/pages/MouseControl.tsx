@@ -5,7 +5,8 @@ import Step2 from "../components/Step2";
 import Step3 from "../components/Step3";
 import Step4 from "../components/Step4";
 import ChallengeStep from "../components/ChallengeStep";
-import { STEP_METADATA, STEP_PASSWORDS } from "../config/mouseConfig";
+import { STEP_METADATA } from "../config/mouseConfig";
+import { MOUSE_PASSWORDS } from "../config/passwords";
 
 const TOTAL_STEPS = 5;
 
@@ -71,7 +72,7 @@ export default function MouseControlPage() {
 
   const handlePasswordSubmit = () => {
     if (!showPasswordInput) return;
-    const correctPassword = STEP_PASSWORDS[showPasswordInput];
+    const correctPassword = MOUSE_PASSWORDS[showPasswordInput];
     if (passwordValue === correctPassword) {
       setCurrentStep(showPasswordInput);
       setShowPasswordInput(null);
