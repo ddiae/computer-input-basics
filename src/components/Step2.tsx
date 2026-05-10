@@ -42,7 +42,7 @@ const Step2: FC<{ onComplete: () => void }> = ({ onComplete }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', backgroundColor: '#e1f5fe' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: 'linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
       {/* 바닥 (잔디) */}
       <div style={{
         position: 'absolute',
