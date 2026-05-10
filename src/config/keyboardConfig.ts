@@ -21,9 +21,15 @@ export const KSTEP_METADATA: Record<
     icon: "✍️"
   },
   4: {
-    action: "키 반응",
+    action: "키 위치",
     learned: "키 위치를 배웠어요!",
     description: "Enter, Space, Ctrl, Shift\n방향키 위치를 익혔어요.",
     icon: "⌨️"
+  },
+  5: {
+    action: "키 이름",
+    learned: "키 이름을 배웠어요!",
+    description: "Ctrl·Shift·Enter·Space\n각 키를 어떻게 읽는지 알았어요.",
+    icon: "🔤"
   }
 };

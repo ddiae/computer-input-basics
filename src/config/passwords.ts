@@ -10,5 +10,6 @@ export const KEY_PASSWORDS: Record<number, string> = {
   1: "딸기",
   2: "하늘",
   3: "토끼",
-  4: "구름"
+  4: "구름",
+  5: "우주"
 };

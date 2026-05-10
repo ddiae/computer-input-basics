@@ -5,16 +5,18 @@ import KStep1 from "../components/KStep1";
 import KStep2 from "../components/KStep2";
 import KStep3 from "../components/KStep3";
 import KStep4 from "../components/KStep4";
+import KStep5 from "../components/KStep5";
 import { KSTEP_METADATA } from "../config/keyboardConfig";
 import { KEY_PASSWORDS } from "../config/passwords";
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 const INSTRUCTIONS: Record<number, string> = {
   1: "숫자 키를 찾아 눌러봐요!",
   2: "방향키로 캐릭터를 움직여요!",
   3: "단어를 보고 따라 입력해요!",
-  4: "화면에 나오는 키를 빠르게 눌러요!"
+  4: "화면에 나오는 키를 빠르게 눌러요!",
+  5: "키 이름을 연결해봐요!"
 };
 
 const STORAGE_KEY = "mcb_keyboard_progress";
@@ -99,10 +101,10 @@ export default function KeyboardPage() {
         <div style={{ position: "absolute", left: "12px" }}>
           <button
             className="reset-button"
-            onClick={() => navigate("/mouse-control")}
+            onClick={() => navigate("/")}
             style={{ position: "static" }}
           >
-            ← 마우스 연습
+            홈으로
           </button>
         </div>
         <button
@@ -129,6 +131,9 @@ export default function KeyboardPage() {
         )}
         {currentStep === 4 && (
           <KStep4 key={`ks4-${resetKey}`} onComplete={() => completeStep(4)} />
+        )}
+        {currentStep === 5 && (
+          <KStep5 key={`ks5-${resetKey}`} onComplete={() => completeStep(5)} />
         )}
       </div>
 
