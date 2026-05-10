@@ -30,35 +30,52 @@ export default function MouseControlPage() {
     }
     return [];
   });
+  const [firstUnlocked, setFirstUnlocked] = useState<boolean>(() => {
+    const saved = localStorage.getItem("mcb_progress");
+    if (saved) {
+      const data = JSON.parse(saved);
+      return data.firstUnlocked || (data.completedSteps?.length > 0);
+    }
+    return false;
+  });
   const [showFeedback, setShowFeedback] = useState<number | null>(null);
   const [showPasswordInput, setShowPasswordInput] = useState<number | null>(
-    null
+    () => {
+      const saved = localStorage.getItem("mcb_progress");
+      if (!saved) return 1;
+      const data = JSON.parse(saved);
+      const unlocked = data.firstUnlocked || data.completedSteps?.length > 0;
+      return unlocked ? null : 1;
+    }
   );
   const [passwordValue, setPasswordValue] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const navigate = useNavigate();
 
+  const saveProgress = (completed: number[], unlocked: boolean) => {
+    localStorage.setItem("mcb_progress", JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked }));
+  };
+
   const completeStep = (stepNumber: number) => {
     if (!completedSteps.includes(stepNumber)) {
       const newCompleted = [...completedSteps, stepNumber];
       setCompletedSteps(newCompleted);
-      localStorage.setItem(
-        "mcb_progress",
-        JSON.stringify({ completedSteps: newCompleted })
-      );
+      saveProgress(newCompleted, true);
     }
     setShowFeedback(stepNumber);
   };
 
   const confirmReset = () => {
     setCompletedSteps([]);
+    setFirstUnlocked(false);
     setCurrentStep(1);
+    setShowPasswordInput(1);
     localStorage.removeItem("mcb_progress");
     setShowResetConfirm(false);
   };
 
   const isUnlocked = (stepNum: number) => {
-    if (stepNum === 1) return true;
+    if (stepNum === 1) return firstUnlocked;
     return completedSteps.includes(stepNum - 1);
   };
 
@@ -76,6 +93,10 @@ export default function MouseControlPage() {
     if (!showPasswordInput) return;
     const correctPassword = MOUSE_PASSWORDS[showPasswordInput];
     if (passwordValue === correctPassword) {
+      if (showPasswordInput === 1) {
+        setFirstUnlocked(true);
+        saveProgress(completedSteps, true);
+      }
       setCurrentStep(showPasswordInput);
       setShowPasswordInput(null);
     } else {
