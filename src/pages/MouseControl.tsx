@@ -7,6 +7,7 @@ import Step4 from "../components/Step4";
 import ChallengeStep from "../components/ChallengeStep";
 import { STEP_METADATA } from "../config/mouseConfig";
 import { MOUSE_PASSWORDS } from "../config/passwords";
+import { useNavigate } from "react-router-dom";
 
 const TOTAL_STEPS = 5;
 
@@ -35,6 +36,7 @@ export default function MouseControlPage() {
   );
   const [passwordValue, setPasswordValue] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const navigate = useNavigate();
 
   const completeStep = (stepNumber: number) => {
     if (!completedSteps.includes(stepNumber)) {
@@ -85,6 +87,15 @@ export default function MouseControlPage() {
   return (
     <div className="app-container">
       <div className="heart-bar">
+        <div style={{ position: "absolute", left: "12px" }}>
+          <button
+            className="reset-button"
+            onClick={() => navigate("/")}
+            style={{ position: "static" }}
+          >
+            홈으로
+          </button>
+        </div>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <span
             key={i}
