@@ -293,15 +293,18 @@ const Round3: FC<{ onDone: () => void }> = ({ onDone }) => {
   const carrotTimer = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const basketRef = useRef<HTMLDivElement>(null);
+  const spawnCarrotRef = useRef<() => void>(() => {});
 
   const spawnCarrot = useCallback(() => {
     if (carrotTimer.current) clearTimeout(carrotTimer.current);
     setActiveHole(Math.floor(Math.random() * R3_HOLES));
     carrotTimer.current = window.setTimeout(() => {
       setActiveHole(null);
-      setTimeout(spawnCarrot, 400);
+      setTimeout(() => spawnCarrotRef.current(), 400);
     }, CARROT_STAY);
   }, []);
+
+  useEffect(() => { spawnCarrotRef.current = spawnCarrot; }, [spawnCarrot]);
 
   useEffect(() => {
     if (!started) return;
