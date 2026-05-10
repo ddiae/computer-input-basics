@@ -7,9 +7,9 @@ export const MOUSE_PASSWORDS: Record<number, string> = {
 };
 
 export const KEY_PASSWORDS: Record<number, string> = {
-  1: "딸기",
+  1: "나무",
   2: "하늘",
-  3: "토끼",
+  3: "우주",
   4: "구름",
-  5: "우주"
+  5: "안녕"
 };
