@@ -52,6 +52,7 @@ export default function KeyboardPage() {
     }
   );
   const [passwordValue, setPasswordValue] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const saveProgress = (completed: number[], unlocked: boolean) => {
@@ -102,7 +103,7 @@ export default function KeyboardPage() {
       setCurrentStep(showPasswordInput);
       setShowPasswordInput(null);
     } else {
-      alert("비밀번호가 틀렸어요! 선생님께 도움을 요청하세요.");
+      setPasswordError("비밀번호가 틀렸어요! 선생님께 도움을 요청하세요.");
       setPasswordValue("");
     }
   };
@@ -223,14 +224,19 @@ export default function KeyboardPage() {
               type="text"
               value={passwordValue}
               placeholder="한글 단어 입력"
-              onChange={(e) => setPasswordValue(e.target.value)}
+              onChange={(e) => { setPasswordValue(e.target.value); setPasswordError(""); }}
               onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
               autoFocus
             />
+            {passwordError && (
+              <p style={{ color: "#dc2626", fontWeight: 700, fontSize: "0.9rem", margin: "4px 0 0" }}>
+                {passwordError}
+              </p>
+            )}
             <div className="modal-buttons">
               <button
                 className="modal-btn modal-btn--secondary"
-                onClick={() => setShowPasswordInput(null)}
+                onClick={() => { setShowPasswordInput(null); setPasswordError(""); }}
               >
                 뒤로가기
               </button>
