@@ -41,7 +41,7 @@ export default function IntroPage() {
   return (
     <div className="intro-screen">
       <div className="intro-content">
-        <div className="intro-emoji">🖱️</div>
+        <div className="intro-emoji">💻</div>
         <h1 className="intro-text">
           {lines.map((line, i) => (
             <span key={i}>
@@ -51,18 +51,20 @@ export default function IntroPage() {
           ))}
           {!typingDone && <span className="intro-cursor" />}
         </h1>
-        <button
-          className={`intro-start-btn ${typingDone ? "visible" : ""}`}
-          onClick={() => navigate("/mouse-control")}
-        >
-          마우스와 친해지기
-        </button>
-        <button
-          className={`intro-start-btn ${typingDone ? "visible" : ""}`}
-          onClick={() => navigate("/keyboard-control")}
-        >
-          키보드와 친해지기
-        </button>
+        <div className="flex flex-col gap-4">
+          <button
+            className={`intro-start-btn ${typingDone ? "visible" : ""}`}
+            onClick={() => navigate("/mouse-control")}
+          >
+            마우스와 친해지기
+          </button>
+          <button
+            className={`intro-start-btn ${typingDone ? "visible" : ""}`}
+            onClick={() => navigate("/keyboard")}
+          >
+            키보드와 친해지기
+          </button>
+        </div>
       </div>
     </div>
   );
