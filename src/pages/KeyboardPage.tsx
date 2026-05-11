@@ -7,7 +7,7 @@ import KStep3 from "../components/KStep3";
 import KStep4 from "../components/KStep4";
 import KStep5 from "../components/KStep5";
 import { KSTEP_METADATA } from "../config/keyboardConfig";
-import { KEY_PASSWORDS } from "../config/passwords";
+import { KEY_PASSWORDS, KEY_PASSWORD_STEPS } from "../config/passwords";
 
 const TOTAL_STEPS = 5;
 
@@ -26,7 +26,7 @@ export default function KeyboardPage() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [resetKey, setResetKey] = useState<number>(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       const { completedSteps: savedCompleted } = JSON.parse(saved);
       return savedCompleted || [];
@@ -34,7 +34,7 @@ export default function KeyboardPage() {
     return [];
   });
   const [firstUnlocked, setFirstUnlocked] = useState<boolean>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       const data = JSON.parse(saved);
       return data.firstUnlocked || (data.completedSteps?.length > 0);
@@ -44,7 +44,8 @@ export default function KeyboardPage() {
   const [showFeedback, setShowFeedback] = useState<number | null>(null);
   const [showPasswordInput, setShowPasswordInput] = useState<number | null>(
     () => {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!KEY_PASSWORD_STEPS.includes(1)) return null;
+      const saved = sessionStorage.getItem(STORAGE_KEY);
       if (!saved) return 1;
       const data = JSON.parse(saved);
       const unlocked = data.firstUnlocked || data.completedSteps?.length > 0;
@@ -56,7 +57,7 @@ export default function KeyboardPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const saveProgress = (completed: number[], unlocked: boolean) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked }));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked }));
   };
 
   const completeStep = (stepNumber: number) => {
@@ -72,19 +73,23 @@ export default function KeyboardPage() {
     setCompletedSteps([]);
     setFirstUnlocked(false);
     setCurrentStep(1);
-    setShowPasswordInput(1);
-    localStorage.removeItem(STORAGE_KEY);
+    setShowPasswordInput(KEY_PASSWORD_STEPS.includes(1) ? 1 : null);
+    sessionStorage.removeItem(STORAGE_KEY);
     setShowResetConfirm(false);
   };
 
   const isUnlocked = (stepNum: number) => {
-    if (stepNum === 1) return firstUnlocked;
+    if (stepNum === 1) return KEY_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
     return completedSteps.includes(stepNum - 1);
   };
 
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
     if (completedSteps.includes(targetStep) || targetStep < currentStep) {
+      setCurrentStep(targetStep);
+      return;
+    }
+    if (!KEY_PASSWORD_STEPS.includes(targetStep)) {
       setCurrentStep(targetStep);
       return;
     }

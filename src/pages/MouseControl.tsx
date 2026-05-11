@@ -6,14 +6,14 @@ import Step3 from "../components/Step3";
 import Step4 from "../components/Step4";
 import ChallengeStep from "../components/ChallengeStep";
 import { STEP_METADATA } from "../config/mouseConfig";
-import { MOUSE_PASSWORDS } from "../config/passwords";
+import { MOUSE_PASSWORDS, MOUSE_PASSWORD_STEPS } from "../config/passwords";
 import { useNavigate } from "react-router-dom";
 
 const TOTAL_STEPS = 5;
 
 const INSTRUCTIONS: Record<number, string> = {
   1: "풍선을 모두 클릭해서 터뜨려요!",
-  2: "꽃씨를 빠르게 눌러서 꽃을 피워요!",
+  2: "꽃씨를 빠르게 두번 눌러서 꽃을 피워요!",
   3: "동물을 끌어다 알맞은 집에 놓아줘요!",
   4: "점선을 따라 마우스를 움직여 그림을 완성해요!",
   5: "세 가지 미션을 모두 클리어해요! 🏆"
@@ -23,7 +23,7 @@ export default function MouseControlPage() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [resetKey, setResetKey] = useState<number>(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
-    const saved = localStorage.getItem("mcb_progress");
+    const saved = sessionStorage.getItem("mcb_progress");
     if (saved) {
       const { completedSteps: savedCompleted } = JSON.parse(saved);
       return savedCompleted || [];
@@ -31,17 +31,18 @@ export default function MouseControlPage() {
     return [];
   });
   const [firstUnlocked, setFirstUnlocked] = useState<boolean>(() => {
-    const saved = localStorage.getItem("mcb_progress");
+    const saved = sessionStorage.getItem("mcb_progress");
     if (saved) {
       const data = JSON.parse(saved);
-      return data.firstUnlocked || (data.completedSteps?.length > 0);
+      return data.firstUnlocked || data.completedSteps?.length > 0;
     }
     return false;
   });
   const [showFeedback, setShowFeedback] = useState<number | null>(null);
   const [showPasswordInput, setShowPasswordInput] = useState<number | null>(
     () => {
-      const saved = localStorage.getItem("mcb_progress");
+      if (!MOUSE_PASSWORD_STEPS.includes(1)) return null;
+      const saved = sessionStorage.getItem("mcb_progress");
       if (!saved) return 1;
       const data = JSON.parse(saved);
       const unlocked = data.firstUnlocked || data.completedSteps?.length > 0;
@@ -54,7 +55,10 @@ export default function MouseControlPage() {
   const navigate = useNavigate();
 
   const saveProgress = (completed: number[], unlocked: boolean) => {
-    localStorage.setItem("mcb_progress", JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked }));
+    sessionStorage.setItem(
+      "mcb_progress",
+      JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked })
+    );
   };
 
   const completeStep = (stepNumber: number) => {
@@ -70,19 +74,24 @@ export default function MouseControlPage() {
     setCompletedSteps([]);
     setFirstUnlocked(false);
     setCurrentStep(1);
-    setShowPasswordInput(1);
-    localStorage.removeItem("mcb_progress");
+    setShowPasswordInput(MOUSE_PASSWORD_STEPS.includes(1) ? 1 : null);
+    sessionStorage.removeItem("mcb_progress");
     setShowResetConfirm(false);
   };
 
   const isUnlocked = (stepNum: number) => {
-    if (stepNum === 1) return firstUnlocked;
+    if (stepNum === 1)
+      return MOUSE_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
     return completedSteps.includes(stepNum - 1);
   };
 
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
     if (completedSteps.includes(targetStep) || targetStep < currentStep) {
+      setCurrentStep(targetStep);
+      return;
+    }
+    if (!MOUSE_PASSWORD_STEPS.includes(targetStep)) {
       setCurrentStep(targetStep);
       return;
     }
@@ -225,19 +234,32 @@ export default function MouseControlPage() {
               type="text"
               value={passwordValue}
               placeholder="한글 단어 입력"
-              onChange={(e) => { setPasswordValue(e.target.value); setPasswordError(""); }}
+              onChange={(e) => {
+                setPasswordValue(e.target.value);
+                setPasswordError("");
+              }}
               onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
               autoFocus
             />
             {passwordError && (
-              <p style={{ color: "#dc2626", fontWeight: 700, fontSize: "0.9rem", margin: "4px 0 0" }}>
+              <p
+                style={{
+                  color: "#dc2626",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  margin: "4px 0 0"
+                }}
+              >
                 {passwordError}
               </p>
             )}
             <div className="modal-buttons">
               <button
                 className="modal-btn modal-btn--secondary"
-                onClick={() => { setShowPasswordInput(null); setPasswordError(""); }}
+                onClick={() => {
+                  setShowPasswordInput(null);
+                  setPasswordError("");
+                }}
               >
                 뒤로가기
               </button>
