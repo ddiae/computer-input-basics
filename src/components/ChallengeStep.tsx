@@ -278,7 +278,7 @@ const Round2: FC<{ onDone: () => void }> = ({ onDone }) => {
 const R3_HOLES = 9;
 const R3_TARGET = 8;
 const R3_TIME = 30;
-const CARROT_STAY = 2000; // 당근이 머무는 시간(ms)
+const CARROT_STAY = 3000; // 당근이 머무는 시간(ms)
 
 const Round3: FC<{ onDone: () => void }> = ({ onDone }) => {
   const [started, setStarted] = useState(false);
