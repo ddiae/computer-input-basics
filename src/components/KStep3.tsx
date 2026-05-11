@@ -8,12 +8,12 @@ interface WordItem {
 const WORDS: WordItem[] = [
   { text: "사과", lang: "ko" },
   { text: "나비", lang: "ko" },
-  { text: "cat", lang: "en" },
-  { text: "dog", lang: "en" },
-  { text: "sun", lang: "en" },
-  { text: "happy", lang: "en" },
+  { text: "고양이", lang: "ko" },
+  { text: "토끼", lang: "ko" },
+  { text: "안녕하세요", lang: "ko" },
+  { text: "즐거운 하루", lang: "ko" },
   { text: "고양이 밥", lang: "ko" },
-  { text: "love you", lang: "en" }
+  { text: "강아지와 산책하기", lang: "ko" }
 ];
 
 const isKorean = (ch: string) => /[가-힣ㄱ-ㆎ]/.test(ch);
