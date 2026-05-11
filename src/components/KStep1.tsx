@@ -64,7 +64,7 @@ export default function KStep1({ onComplete }: Props) {
           margin: 0
         }}
       >
-        숫자를 눌러보세요!
+        키보드에서 숫자를 찾아 눌러보세요!
       </p>
 
       <div
