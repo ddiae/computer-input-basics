@@ -1,3 +1,10 @@
+// 비밀번호가 필요한 단계 번호를 배열로 지정하세요.
+// 예) 전체 잠금: [1, 2, 3, 4, 5]
+//     첫 단계만: [1]
+//     비밀번호 없음: []
+export const MOUSE_PASSWORD_STEPS: number[] = [1];
+export const KEY_PASSWORD_STEPS: number[] = [1];
+
 export const MOUSE_PASSWORDS: Record<number, string> = {
   1: "사과",
   2: "나비",
