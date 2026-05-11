@@ -35,7 +35,8 @@ const TARGETS: TargetKey[] = [
   {
     label: "Space",
     key: " ",
-    koreanHint: "스페이스라고 읽어요.\n아무것도 적혀있지 않은 가장 긴 키예요!"
+    koreanHint:
+      "스페이스라고 불러요.\n아무것도 적혀있지 않은 가장 길쭉한 모양의 키예요!"
   },
   {
     label: "Ctrl",
