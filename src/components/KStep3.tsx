@@ -6,10 +6,11 @@ interface WordItem {
   lang: "en" | "ko";
 }
 
-function buildWordList(): WordItem[] {
-  if (KSTEP3_LANG_MODE === "ko") return KSTEP3_WORDS.ko;
-  if (KSTEP3_LANG_MODE === "en") return KSTEP3_WORDS.en;
-  // mix: 한글/영어 번갈아 배치
+type LangMode = "ko" | "en" | "mix";
+
+function buildWordList(mode: LangMode): WordItem[] {
+  if (mode === "ko") return KSTEP3_WORDS.ko;
+  if (mode === "en") return KSTEP3_WORDS.en;
   const ko = [...KSTEP3_WORDS.ko];
   const en = [...KSTEP3_WORDS.en];
   const result: WordItem[] = [];
@@ -21,8 +22,6 @@ function buildWordList(): WordItem[] {
   return result;
 }
 
-const WORDS: WordItem[] = buildWordList();
-
 const isKorean = (ch: string) => /[가-힣ㄱ-ㆎ]/.test(ch);
 const isEnglish = (ch: string) => /[a-zA-Z]/.test(ch);
 
@@ -31,6 +30,26 @@ interface Props {
 }
 
 export default function KStep3({ onComplete }: Props) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dropdownOpen]);
+  const [langMode, setLangMode] = useState<LangMode>(KSTEP3_LANG_MODE);
+  const [words, setWords] = useState<WordItem[]>(() =>
+    buildWordList(KSTEP3_LANG_MODE)
+  );
   const [index, setIndex] = useState(0);
   const [input, setInput] = useState("");
   const [shake, setShake] = useState(false);
@@ -39,9 +58,20 @@ export default function KStep3({ onComplete }: Props) {
   const [showLangHint, setShowLangHint] = useState(false);
   const langHintTimer = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const TOTAL = WORDS.length;
 
-  const current = WORDS[index];
+  const TOTAL = words.length;
+  const current = words[index];
+
+  // 모드 변경 시 단어 목록·진행도 리셋
+  const handleModeChange = (mode: LangMode) => {
+    setLangMode(mode);
+    setWords(buildWordList(mode));
+    setIndex(0);
+    setInput("");
+    setMessage("");
+    setShowLangHint(false);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -54,15 +84,17 @@ export default function KStep3({ onComplete }: Props) {
     setShowLangHint(true);
     langHintTimer.current = window.setTimeout(
       () => setShowLangHint(false),
-      2000
+      3000
     );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (done) return;
-    const val = e.target.value;
+    let val = e.target.value;
 
-    // 잘못된 언어 입력 감지
+    // 영어 단어는 자동 대문자 변환
+    if (current.lang === "en") val = val.toUpperCase();
+
     const lastChar = val[val.length - 1];
     if (lastChar) {
       if (current.lang === "ko" && isEnglish(lastChar)) triggerLangHint();
@@ -110,6 +142,12 @@ export default function KStep3({ onComplete }: Props) {
     });
   };
 
+  const MODE_LABELS: { value: LangMode; label: string }[] = [
+    { value: "ko", label: "한글" },
+    { value: "en", label: "영어" },
+    { value: "mix", label: "혼합" }
+  ];
+
   return (
     <div
       style={{
@@ -122,12 +160,89 @@ export default function KStep3({ onComplete }: Props) {
         position: "relative"
       }}
     >
+      {/* 모드 선택 커스텀 드롭다운 — 우측 상단 */}
+      <div
+        ref={dropdownRef}
+        style={{ position: "absolute", top: "8px", right: "12px", zIndex: 20 }}
+      >
+        <div
+          onClick={() => setDropdownOpen((o) => !o)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            background: "#f5f3ff",
+            borderRadius: "12px",
+            padding: "5px 12px",
+            cursor: "pointer",
+            fontSize: "0.85rem",
+            fontWeight: 700,
+            color: "#4c1d95",
+            userSelect: "none"
+          }}
+        >
+          {MODE_LABELS.find((m) => m.value === langMode)?.label}
+          <span
+            style={{
+              fontSize: "0.6rem",
+              color: "#a78bfa",
+              transform: dropdownOpen ? "rotate(180deg)" : "none",
+              transition: "transform 0.15s",
+              display: "inline-block"
+            }}
+          >
+            ▼
+          </span>
+        </div>
+        {dropdownOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: "calc(100% + 4px)",
+              right: 0,
+              background: "white",
+              borderRadius: "12px",
+              boxShadow: "0 4px 16px rgba(124,58,237,0.18)",
+              overflow: "hidden",
+              minWidth: "80px"
+            }}
+          >
+            {MODE_LABELS.map(({ value, label }) => (
+              <div
+                key={value}
+                onClick={() => {
+                  handleModeChange(value);
+                  setDropdownOpen(false);
+                }}
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  color: langMode === value ? "#7c3aed" : "#4c1d95",
+                  background: langMode === value ? "#f5f3ff" : "white",
+                  cursor: "pointer"
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "#f5f3ff")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background =
+                    langMode === value ? "#f5f3ff" : "white")
+                }
+              >
+                {label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* 한/영 전환 안내 — absolute로 레이아웃 영향 없음 */}
       {showLangHint && (
         <div
           style={{
             position: "absolute",
-            top: "12px",
+            top: "80px",
             left: "50%",
             transform: "translateX(-50%)",
             fontSize: "clamp(0.85rem, 2vw, 1rem)",
