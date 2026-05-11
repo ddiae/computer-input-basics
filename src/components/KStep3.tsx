@@ -12,8 +12,8 @@ const WORDS: WordItem[] = [
   { text: "토끼", lang: "ko" },
   { text: "안녕하세요", lang: "ko" },
   { text: "즐거운 하루", lang: "ko" },
-  { text: "고양이 밥", lang: "ko" },
-  { text: "강아지와 산책하기", lang: "ko" }
+  { text: "아기새의 발자국", lang: "ko" },
+  { text: "강아지와 함께 산책해요", lang: "ko" }
 ];
 
 const isKorean = (ch: string) => /[가-힣ㄱ-ㆎ]/.test(ch);
