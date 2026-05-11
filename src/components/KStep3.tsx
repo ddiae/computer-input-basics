@@ -1,20 +1,27 @@
 import { useState, useEffect, useRef } from "react";
+import { KSTEP3_LANG_MODE, KSTEP3_WORDS } from "../config/keyboardConfig";
 
 interface WordItem {
   text: string;
   lang: "en" | "ko";
 }
 
-const WORDS: WordItem[] = [
-  { text: "사과", lang: "ko" },
-  { text: "나비", lang: "ko" },
-  { text: "고양이", lang: "ko" },
-  { text: "토끼", lang: "ko" },
-  { text: "안녕하세요", lang: "ko" },
-  { text: "즐거운 하루", lang: "ko" },
-  { text: "아기새의 발자국", lang: "ko" },
-  { text: "강아지와 함께 산책해요", lang: "ko" }
-];
+function buildWordList(): WordItem[] {
+  if (KSTEP3_LANG_MODE === "ko") return KSTEP3_WORDS.ko;
+  if (KSTEP3_LANG_MODE === "en") return KSTEP3_WORDS.en;
+  // mix: 한글/영어 번갈아 배치
+  const ko = [...KSTEP3_WORDS.ko];
+  const en = [...KSTEP3_WORDS.en];
+  const result: WordItem[] = [];
+  const len = Math.max(ko.length, en.length);
+  for (let i = 0; i < len; i++) {
+    if (i < ko.length) result.push(ko[i]);
+    if (i < en.length) result.push(en[i]);
+  }
+  return result;
+}
+
+const WORDS: WordItem[] = buildWordList();
 
 const isKorean = (ch: string) => /[가-힣ㄱ-ㆎ]/.test(ch);
 const isEnglish = (ch: string) => /[a-zA-Z]/.test(ch);
