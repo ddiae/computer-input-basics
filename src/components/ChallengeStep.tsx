@@ -327,7 +327,7 @@ const Round2: FC<{ onDone: () => void }> = ({ onDone }) => {
         <div
           style={{
             position: "absolute",
-            top: 44,
+            top: 55,
             left: "50%",
             transform: "translateX(-50%)",
             background: "#f87171",

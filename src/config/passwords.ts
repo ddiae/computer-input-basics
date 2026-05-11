@@ -1,3 +1,7 @@
+// 선생님 모드 비밀번호 (Ctrl+Shift+T 로 활성화)
+export const TEACHER_PASSWORD = "teacher";
+export const TEACHER_MODE_KEY = "mcb_teacher_mode";
+
 // 비밀번호가 필요한 단계 번호를 배열로 지정하세요.
 // 예) 전체 잠금: [1, 2, 3, 4, 5]
 //     첫 단계만: [1]

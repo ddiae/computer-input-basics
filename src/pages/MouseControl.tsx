@@ -6,7 +6,9 @@ import Step3 from "../components/Step3";
 import Step4 from "../components/Step4";
 import ChallengeStep from "../components/ChallengeStep";
 import { STEP_METADATA } from "../config/mouseConfig";
-import { MOUSE_PASSWORDS, MOUSE_PASSWORD_STEPS } from "../config/passwords";
+import { MOUSE_PASSWORDS, MOUSE_PASSWORD_STEPS, TEACHER_MODE_KEY } from "../config/passwords";
+
+const isTeacherMode = () => !!sessionStorage.getItem(TEACHER_MODE_KEY);
 import { useNavigate } from "react-router-dom";
 
 const TOTAL_STEPS = 5;
@@ -41,6 +43,7 @@ export default function MouseControlPage() {
   const [showFeedback, setShowFeedback] = useState<number | null>(null);
   const [showPasswordInput, setShowPasswordInput] = useState<number | null>(
     () => {
+      if (isTeacherMode()) return null;
       if (!MOUSE_PASSWORD_STEPS.includes(1)) return null;
       const saved = sessionStorage.getItem("mcb_progress");
       if (!saved) return 1;
@@ -80,6 +83,7 @@ export default function MouseControlPage() {
   };
 
   const isUnlocked = (stepNum: number) => {
+    if (isTeacherMode()) return true;
     if (stepNum === 1)
       return MOUSE_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
     return completedSteps.includes(stepNum - 1);
@@ -87,7 +91,7 @@ export default function MouseControlPage() {
 
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
-    if (completedSteps.includes(targetStep) || targetStep < currentStep) {
+    if (isTeacherMode() || completedSteps.includes(targetStep) || targetStep < currentStep) {
       setCurrentStep(targetStep);
       return;
     }

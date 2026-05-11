@@ -7,7 +7,9 @@ import KStep3 from "../components/KStep3";
 import KStep4 from "../components/KStep4";
 import KStep5 from "../components/KStep5";
 import { KSTEP_METADATA } from "../config/keyboardConfig";
-import { KEY_PASSWORDS, KEY_PASSWORD_STEPS } from "../config/passwords";
+import { KEY_PASSWORDS, KEY_PASSWORD_STEPS, TEACHER_MODE_KEY } from "../config/passwords";
+
+const isTeacherMode = () => !!sessionStorage.getItem(TEACHER_MODE_KEY);
 
 const TOTAL_STEPS = 5;
 
@@ -44,6 +46,7 @@ export default function KeyboardPage() {
   const [showFeedback, setShowFeedback] = useState<number | null>(null);
   const [showPasswordInput, setShowPasswordInput] = useState<number | null>(
     () => {
+      if (isTeacherMode()) return null;
       if (!KEY_PASSWORD_STEPS.includes(1)) return null;
       const saved = sessionStorage.getItem(STORAGE_KEY);
       if (!saved) return 1;
@@ -82,6 +85,7 @@ export default function KeyboardPage() {
   };
 
   const isUnlocked = (stepNum: number) => {
+    if (isTeacherMode()) return true;
     if (stepNum === 1)
       return KEY_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
     return completedSteps.includes(stepNum - 1);
@@ -89,7 +93,7 @@ export default function KeyboardPage() {
 
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
-    if (completedSteps.includes(targetStep) || targetStep < currentStep) {
+    if (isTeacherMode() || completedSteps.includes(targetStep) || targetStep < currentStep) {
       setCurrentStep(targetStep);
       return;
     }
