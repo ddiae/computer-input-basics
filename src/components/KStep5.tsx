@@ -137,20 +137,20 @@ export default function KStep5({ onComplete }: Props) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 12,
+        gap: 50,
         userSelect: "none"
       }}
     >
-      <p
+      {/* <p
         style={{
-          fontWeight: 800,
+          fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
+          fontWeight: 700,
           color: "#4c1d95",
-          fontSize: "clamp(0.9rem, 2vw, 1.1rem)",
           margin: 0
         }}
       >
-        키 이름을 드래그해서 읽는 방법과 연결해요!
-      </p>
+        키와 키의 이름을 올바르게 연결해요!
+      </p> */}
 
       {/* SVG 연결선 레이어 */}
       <svg
@@ -206,7 +206,13 @@ export default function KStep5({ onComplete }: Props) {
         }}
       >
         {/* 왼쪽: 키 라벨 */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "clamp(16px, 3vh, 28px)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "clamp(16px, 3vh, 28px)"
+          }}
+        >
           {PAIRS.map((p) => {
             const isMatched = matched.has(p.id);
             const isWrong = wrong === p.id;
@@ -254,7 +260,13 @@ export default function KStep5({ onComplete }: Props) {
         </div>
 
         {/* 오른쪽: 한글 이름 (셔플) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "clamp(16px, 3vh, 28px)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "clamp(16px, 3vh, 28px)"
+          }}
+        >
           {rightOrder.map((p) => {
             const isMatched = matched.has(p.id);
             return (

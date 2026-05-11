@@ -7,18 +7,22 @@ import KStep3 from "../components/KStep3";
 import KStep4 from "../components/KStep4";
 import KStep5 from "../components/KStep5";
 import { KSTEP_METADATA } from "../config/keyboardConfig";
-import { KEY_PASSWORDS, KEY_PASSWORD_STEPS, TEACHER_MODE_KEY } from "../config/passwords";
+import {
+  KEY_PASSWORDS,
+  KEY_PASSWORD_STEPS,
+  TEACHER_MODE_KEY
+} from "../config/passwords";
 
 const isTeacherMode = () => !!sessionStorage.getItem(TEACHER_MODE_KEY);
 
 const TOTAL_STEPS = 5;
 
 const INSTRUCTIONS: Record<number, string> = {
-  1: "숫자 키를 찾아 눌러봐요!",
+  1: "키보드에서 숫자를 찾아 눌러봐요!",
   2: "방향키로 캐릭터를 움직여요!",
   3: "단어를 보고 따라 입력해요!",
   4: "화면에 나오는 키 찾아 눌러봐요!",
-  5: "키 이름을 연결해봐요!"
+  5: "키와 키의 이름을 올바르게 연결해요!"
 };
 
 const STORAGE_KEY = "mcb_keyboard_progress";
@@ -93,7 +97,11 @@ export default function KeyboardPage() {
 
   const tryNavigate = (targetStep: number) => {
     if (targetStep === currentStep) return;
-    if (isTeacherMode() || completedSteps.includes(targetStep) || targetStep < currentStep) {
+    if (
+      isTeacherMode() ||
+      completedSteps.includes(targetStep) ||
+      targetStep < currentStep
+    ) {
       setCurrentStep(targetStep);
       return;
     }
@@ -260,7 +268,10 @@ export default function KeyboardPage() {
               <button
                 className="modal-btn modal-btn--secondary"
                 onClick={() => {
-                  if (showPasswordInput === 1) { navigate("/"); return; }
+                  if (showPasswordInput === 1) {
+                    navigate("/");
+                    return;
+                  }
                   setShowPasswordInput(null);
                   setPasswordError("");
                 }}

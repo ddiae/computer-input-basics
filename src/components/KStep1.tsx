@@ -56,7 +56,7 @@ export default function KStep1({ onComplete }: Props) {
         gap: "24px"
       }}
     >
-      <p
+      {/* <p
         style={{
           fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
           fontWeight: 700,
@@ -65,7 +65,7 @@ export default function KStep1({ onComplete }: Props) {
         }}
       >
         키보드에서 숫자를 찾아 눌러보세요!
-      </p>
+      </p> */}
 
       <div
         style={{

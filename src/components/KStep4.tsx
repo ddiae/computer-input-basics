@@ -131,7 +131,7 @@ export default function KStep4({ onComplete }: Props) {
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        gap: "24px"
+        gap: "50px"
       }}
     >
       {/* 안내 텍스트 */}
@@ -143,9 +143,7 @@ export default function KStep4({ onComplete }: Props) {
           margin: 0
         }}
       >
-        {status === "wrong"
-          ? "다시 눌러봐요! 👀"
-          : "이 키를 찾아서 눌러보세요!"}
+        {status === "wrong" && "다시 눌러봐요! 👀"}
       </p>
 
       {/* 키 라벨 */}
