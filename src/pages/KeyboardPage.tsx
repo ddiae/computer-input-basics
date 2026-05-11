@@ -15,7 +15,7 @@ const INSTRUCTIONS: Record<number, string> = {
   1: "숫자 키를 찾아 눌러봐요!",
   2: "방향키로 캐릭터를 움직여요!",
   3: "단어를 보고 따라 입력해요!",
-  4: "화면에 나오는 키를 빠르게 눌러요!",
+  4: "화면에 나오는 키 찾아 눌러봐요!",
   5: "키 이름을 연결해봐요!"
 };
 
@@ -37,7 +37,7 @@ export default function KeyboardPage() {
     const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       const data = JSON.parse(saved);
-      return data.firstUnlocked || (data.completedSteps?.length > 0);
+      return data.firstUnlocked || data.completedSteps?.length > 0;
     }
     return false;
   });
@@ -57,7 +57,10 @@ export default function KeyboardPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const saveProgress = (completed: number[], unlocked: boolean) => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked }));
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ completedSteps: completed, firstUnlocked: unlocked })
+    );
   };
 
   const completeStep = (stepNumber: number) => {
@@ -79,7 +82,8 @@ export default function KeyboardPage() {
   };
 
   const isUnlocked = (stepNum: number) => {
-    if (stepNum === 1) return KEY_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
+    if (stepNum === 1)
+      return KEY_PASSWORD_STEPS.includes(1) ? firstUnlocked : true;
     return completedSteps.includes(stepNum - 1);
   };
 
@@ -229,19 +233,32 @@ export default function KeyboardPage() {
               type="text"
               value={passwordValue}
               placeholder="한글 단어 입력"
-              onChange={(e) => { setPasswordValue(e.target.value); setPasswordError(""); }}
+              onChange={(e) => {
+                setPasswordValue(e.target.value);
+                setPasswordError("");
+              }}
               onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
               autoFocus
             />
             {passwordError && (
-              <p style={{ color: "#dc2626", fontWeight: 700, fontSize: "0.9rem", margin: "4px 0 0" }}>
+              <p
+                style={{
+                  color: "#dc2626",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  margin: "4px 0 0"
+                }}
+              >
                 {passwordError}
               </p>
             )}
             <div className="modal-buttons">
               <button
                 className="modal-btn modal-btn--secondary"
-                onClick={() => { setShowPasswordInput(null); setPasswordError(""); }}
+                onClick={() => {
+                  setShowPasswordInput(null);
+                  setPasswordError("");
+                }}
               >
                 뒤로가기
               </button>

@@ -71,7 +71,7 @@ export default function KStep1({ onComplete }: Props) {
         style={{
           width: "clamp(140px, 22vw, 200px)",
           height: "clamp(140px, 22vw, 200px)",
-          borderRadius: "50%",
+          borderRadius: "24px",
           background: success
             ? "linear-gradient(135deg, #10b981, #34d399)"
             : "linear-gradient(135deg, #7c3aed, #a78bfa)",

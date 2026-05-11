@@ -218,12 +218,12 @@ export default function KStep3({ onComplete }: Props) {
 
       <p
         style={{
-          fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+          fontSize: "clamp(1rem, 2.5vw, 1.3rem)",
           fontWeight: 700,
           color: "#6d28d9",
           margin: 0,
           background: "#f5f3ff",
-          padding: "6px 20px",
+          padding: "8px 24px",
           borderRadius: "20px",
           border: "2px solid #c084fc"
         }}

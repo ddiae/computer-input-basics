@@ -3,17 +3,50 @@ import { useEffect, useState, useRef, useCallback } from "react";
 interface TargetKey {
   label: string;
   key: string;
+  koreanHint: string;
 }
 
 const TARGETS: TargetKey[] = [
-  { label: "↑", key: "ArrowUp" },
-  { label: "↓", key: "ArrowDown" },
-  { label: "←", key: "ArrowLeft" },
-  { label: "→", key: "ArrowRight" },
-  { label: "Enter ↵", key: "Enter" },
-  { label: "Space", key: " " },
-  { label: "Ctrl", key: "Control" },
-  { label: "Shift", key: "Shift" }
+  {
+    label: "↑",
+    key: "ArrowUp",
+    koreanHint: "위쪽 방향키예요.\n화살표가 위를 가리키고 있어요!"
+  },
+  {
+    label: "↓",
+    key: "ArrowDown",
+    koreanHint: "아래쪽 방향키예요.\n화살표가 아래를 가리키고 있어요!"
+  },
+  {
+    label: "←",
+    key: "ArrowLeft",
+    koreanHint: "왼쪽 방향키예요.\n화살표가 왼쪽을 가리키고 있어요!"
+  },
+  {
+    label: "→",
+    key: "ArrowRight",
+    koreanHint: "오른쪽 방향키예요.\n화살표가 오른쪽을 가리키고 있어요!"
+  },
+  {
+    label: "Enter ↵",
+    key: "Enter",
+    koreanHint: "엔터키라고 불러요.\n줄을 바꾸거나 확인할 때 눌러요!"
+  },
+  {
+    label: "Space",
+    key: " ",
+    koreanHint: "스페이스라고 읽어요.\n아무것도 적혀있지 않은 가장 긴 키예요!"
+  },
+  {
+    label: "Ctrl",
+    key: "Control",
+    koreanHint: "컨트롤키라고 불러요.\n다른 키와 함께 쓰는 특별한 키예요!"
+  },
+  {
+    label: "Shift",
+    key: "Shift",
+    koreanHint: "시프트키라고 불러요.\n쌍자음을 쓸 때 함께 눌러요!"
+  }
 ];
 
 function shuffle<T>(arr: T[]): T[] {
@@ -100,20 +133,18 @@ export default function KStep4({ onComplete }: Props) {
         gap: "24px"
       }}
     >
-      {/* 진행도 */}
+      {/* 안내 텍스트 */}
       <p
         style={{
-          fontSize: "clamp(0.9rem, 2vw, 1.1rem)",
+          fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
           fontWeight: 700,
-          color: "#6d28d9",
-          margin: 0,
-          background: "#f5f3ff",
-          padding: "6px 20px",
-          borderRadius: "20px",
-          border: "2px solid #c084fc"
+          color: "#4c1d95",
+          margin: 0
         }}
       >
-        {round + 1} / {TARGETS.length}
+        {status === "wrong"
+          ? "다시 눌러봐요! 👀"
+          : "이 키를 찾아서 눌러보세요!"}
       </p>
 
       {/* 키 라벨 */}
@@ -132,7 +163,7 @@ export default function KStep4({ onComplete }: Props) {
               : status === "wrong"
                 ? "linear-gradient(135deg, #dc2626, #f87171)"
                 : "linear-gradient(135deg, #7c3aed, #a78bfa)",
-          borderRadius: "20px",
+          borderRadius: "24px",
           boxShadow:
             status === "correct"
               ? "0 8px 30px rgba(16,185,129,0.4)"
@@ -151,11 +182,15 @@ export default function KStep4({ onComplete }: Props) {
           style={{
             fontSize: isSpace
               ? "clamp(1.5rem, 4vw, 2.2rem)"
-              : "clamp(2.5rem, 7vw, 4.5rem)",
+              : "clamp(3rem, 9vw, 5.5rem)",
             fontWeight: 900,
             color: "white",
+            lineHeight: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             letterSpacing: "0.02em",
-            textAlign: "center"
+            whiteSpace: "nowrap"
           }}
         >
           {status === "correct"
@@ -166,17 +201,51 @@ export default function KStep4({ onComplete }: Props) {
         </span>
       </div>
 
-      <p
+      {/* 힌트 영역 (KStep1의 hint 영역과 동일한 높이 확보) */}
+      <div
         style={{
-          fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
-          fontWeight: 700,
-          color: "#4c1d95",
-          margin: 0
+          minHeight: "48px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
         }}
       >
-        {status === "wrong"
-          ? "다시 눌러봐요! 👀"
-          : "이 키를 찾아서 눌러보세요!"}
+        {status === "waiting" && (
+          <p
+            style={{
+              fontSize: "clamp(0.95rem, 2.5vw, 1.1rem)",
+              fontWeight: 600,
+              color: "#7c3aed",
+              margin: 0,
+              background: "#f5f3ff",
+              padding: "8px 20px",
+              borderRadius: "14px",
+              border: "1.5px solid #e9d5ff",
+              maxWidth: "clamp(260px, 50vw, 420px)",
+              textAlign: "center",
+              lineHeight: 1.6,
+              whiteSpace: "pre-line"
+            }}
+          >
+            {current.koreanHint}
+          </p>
+        )}
+      </div>
+
+      {/* 진행도 */}
+      <p
+        style={{
+          fontSize: "clamp(1rem, 2.5vw, 1.3rem)",
+          fontWeight: 700,
+          color: "#6d28d9",
+          margin: 0,
+          background: "#f5f3ff",
+          padding: "8px 24px",
+          borderRadius: "20px",
+          border: "2px solid #c084fc"
+        }}
+      >
+        {round + 1} / {TARGETS.length}
       </p>
 
       <style>{`
