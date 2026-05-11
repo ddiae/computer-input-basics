@@ -257,6 +257,7 @@ export default function MouseControlPage() {
               <button
                 className="modal-btn modal-btn--secondary"
                 onClick={() => {
+                  if (showPasswordInput === 1) { navigate("/"); return; }
                   setShowPasswordInput(null);
                   setPasswordError("");
                 }}
