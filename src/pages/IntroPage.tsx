@@ -76,7 +76,18 @@ export default function IntroPage() {
     <div className="intro-screen">
       <div className="intro-content">
         {/* 임시 테스트 버튼 */}
-        <button onClick={() => setShowTeacherModal(true)} style={{ position: "fixed", bottom: 8, right: 8, opacity: 0.3, fontSize: "0.7rem" }}>T</button>
+        <button
+          onClick={() => setShowTeacherModal(true)}
+          style={{
+            position: "fixed",
+            bottom: 8,
+            right: 8,
+            opacity: 0.3,
+            fontSize: "0.7rem"
+          }}
+        >
+          T
+        </button>
         <div className="intro-emoji">💻</div>
         {teacherActive && (
           <div
@@ -87,7 +98,7 @@ export default function IntroPage() {
               marginBottom: 4
             }}
           >
-            👩‍🏫 선생님 모드
+            선생님 모드
           </div>
         )}
         <h1 className="intro-text text-xl font-black text-gray-800 leading-relaxed ">
@@ -119,7 +130,7 @@ export default function IntroPage() {
       {showTeacherModal && (
         <div className="modal-overlay">
           <div className="password-modal">
-            <h3>👩‍🏫 선생님 모드</h3>
+            <h3>선생님 모드</h3>
             <p>비밀번호를 입력하세요.</p>
             <input
               type="password"
