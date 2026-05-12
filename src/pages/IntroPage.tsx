@@ -46,7 +46,7 @@ export default function IntroPage() {
   // 선생님 모드 단축키: Shift + T
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "J") {
+      if (e.shiftKey && e.key === "T") {
         e.preventDefault();
         e.stopPropagation();
         setTeacherPassword("");
