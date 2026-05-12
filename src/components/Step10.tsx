@@ -231,7 +231,7 @@ const Step10: FC<{ onComplete: () => void }> = ({ onComplete }) => {
                 transition: "transform 0.1s"
               }}
             >
-              🐈
+              🐦
             </text>
           </g>
 
